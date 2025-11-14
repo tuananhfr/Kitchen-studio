@@ -1,0 +1,462 @@
+/**
+ * 2D Editor Specific Styles
+ */
+
+@import './variables';
+
+// ========== 2D Canvas Container ==========
+
+.canvas-2d-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: $canvas-bg;
+  overflow: hidden;
+
+  &.tool-wall {
+    cursor: crosshair;
+  }
+
+  &.tool-door,
+  &.tool-window {
+    cursor: pointer;
+  }
+
+  &.tool-select {
+    cursor: default;
+  }
+
+  &.tool-measure {
+    cursor: crosshair;
+  }
+
+  &.tool-pan {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}
+
+// ========== Grid ==========
+
+.canvas-grid {
+  stroke: $grid-color-secondary;
+  stroke-width: 0.5;
+  opacity: 0.5;
+
+  &.major {
+    stroke: $grid-color;
+    stroke-width: 1;
+    opacity: 0.7;
+  }
+}
+
+// ========== Wall Elements ==========
+
+.wall-element {
+  stroke: $wall-color;
+  stroke-width: 2;
+  fill: none;
+  cursor: pointer;
+  transition: stroke 0.2s ease;
+
+  &:hover {
+    stroke: lighten($wall-color, 20%);
+    stroke-width: 3;
+  }
+
+  &.selected {
+    stroke: $wall-selected-color;
+    stroke-width: 3;
+  }
+
+  &.drawing {
+    stroke: $primary;
+    stroke-width: 2;
+    stroke-dasharray: 5, 5;
+    opacity: 0.7;
+  }
+}
+
+.wall-fill {
+  fill: rgba($wall-color, 0.2);
+  stroke: none;
+
+  &.selected {
+    fill: rgba($wall-selected-color, 0.2);
+  }
+}
+
+.wall-endpoint {
+  fill: $wall-color;
+  stroke: white;
+  stroke-width: 1;
+  cursor: move;
+
+  &:hover {
+    fill: $primary;
+    r: 6;
+  }
+
+  &.selected {
+    fill: $selected-color;
+  }
+}
+
+// ========== Door Elements ==========
+
+.door-element {
+  cursor: pointer;
+
+  .door-frame {
+    fill: $door-color;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &.selected {
+      fill: $selected-color;
+    }
+  }
+
+  .door-swing {
+    stroke: $door-color;
+    stroke-width: 1.5;
+    fill: rgba($door-color, 0.2);
+
+    &.selected {
+      stroke: $selected-color;
+      fill: rgba($selected-color, 0.2);
+    }
+  }
+
+  .door-arc {
+    stroke: $door-color;
+    stroke-width: 1;
+    fill: none;
+    stroke-dasharray: 3, 3;
+
+    &.selected {
+      stroke: $selected-color;
+    }
+  }
+}
+
+// ========== Window Elements ==========
+
+.window-element {
+  cursor: pointer;
+
+  .window-frame {
+    fill: white;
+    stroke: $window-color;
+    stroke-width: 2;
+
+    &:hover {
+      stroke-width: 3;
+    }
+
+    &.selected {
+      stroke: $selected-color;
+    }
+  }
+
+  .window-glass {
+    fill: rgba($window-color, 0.3);
+    stroke: none;
+
+    &.selected {
+      fill: rgba($selected-color, 0.3);
+    }
+  }
+
+  .window-sill {
+    fill: #8b7355;
+    stroke: none;
+    opacity: 0.8;
+  }
+
+  .window-divider {
+    stroke: $window-color;
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+}
+
+// ========== Measurement Lines ==========
+
+.measurement-line {
+  stroke: $primary;
+  stroke-width: 1;
+  stroke-dasharray: 5, 5;
+  fill: none;
+}
+
+.measurement-text {
+  fill: $dark;
+  font-size: 12px;
+  font-weight: $font-weight-semibold;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.measurement-marker {
+  stroke: $primary;
+  stroke-width: 1;
+  fill: none;
+}
+
+// ========== Dimension Lines ==========
+
+.dimension-line {
+  stroke: $secondary;
+  stroke-width: 0.5;
+  fill: none;
+}
+
+.dimension-arrow {
+  fill: $secondary;
+  stroke: none;
+}
+
+.dimension-text {
+  fill: $dark;
+  font-size: 11px;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+  background: white;
+  padding: 2px 4px;
+}
+
+// ========== Selection Box ==========
+
+.selection-box {
+  stroke: $primary;
+  stroke-width: 1;
+  stroke-dasharray: 5, 5;
+  fill: rgba($primary, 0.1);
+  pointer-events: none;
+}
+
+// ========== Snap Points ==========
+
+.snap-point {
+  fill: $success;
+  stroke: white;
+  stroke-width: 1;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.snap-line {
+  stroke: $success;
+  stroke-width: 1;
+  stroke-dasharray: 3, 3;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// ========== Guides ==========
+
+.guide-line {
+  stroke: $info;
+  stroke-width: 1;
+  stroke-dasharray: 10, 5;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+// ========== Canvas Controls ==========
+
+.canvas-controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+
+  .control-button {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid $sidebar-border-color;
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+
+    &:hover {
+      background: $hover-bg;
+      border-color: $primary;
+    }
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// ========== Minimap ==========
+
+.minimap {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  width: 200px;
+  height: 150px;
+  background: white;
+  border: 2px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  z-index: 10;
+
+  .minimap-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .minimap-viewport {
+    stroke: $primary;
+    stroke-width: 2;
+    fill: rgba($primary, 0.1);
+    cursor: move;
+  }
+}
+
+// ========== Context Menu ==========
+
+.context-menu-2d {
+  position: absolute;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  min-width: 180px;
+  z-index: $zindex-popover;
+
+  .context-menu-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: $transition-base;
+
+    &:hover {
+      background: $hover-bg;
+    }
+
+    &:first-child {
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
+    i {
+      font-size: 1rem;
+      width: 1.25rem;
+      text-align: center;
+    }
+
+    .item-label {
+      flex: 1;
+      font-size: $font-size-sm;
+    }
+
+    .item-shortcut {
+      font-size: 0.75rem;
+      color: $secondary;
+    }
+
+    &.danger {
+      color: $danger;
+
+      &:hover {
+        background: rgba($danger, 0.1);
+      }
+    }
+  }
+
+  .context-menu-divider {
+    height: 1px;
+    background: $sidebar-border-color;
+    margin: 0.25rem 0;
+  }
+}
+
+// ========== Tooltips for 2D ==========
+
+.canvas-tooltip {
+  position: absolute;
+  background: $dark;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: $zindex-tooltip;
+  opacity: $tooltip-opacity;
+}
+
+// ========== Coordinate Display ==========
+
+.coordinate-display {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  padding: 0.5rem 0.75rem;
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+  box-shadow: $shadow-sm;
+  z-index: 10;
+
+  .coord-label {
+    color: $secondary;
+    margin-right: 0.5rem;
+  }
+
+  .coord-value {
+    color: $dark;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+// ========== Zoom Level Display ==========
+
+.zoom-display {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  padding: 0.5rem 0.75rem;
+  font-size: $font-size-sm;
+  box-shadow: $shadow-sm;
+  z-index: 10;
+
+  .zoom-value {
+    font-weight: $font-weight-semibold;
+    color: $dark;
+  }
+}

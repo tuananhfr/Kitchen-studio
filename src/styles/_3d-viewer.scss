@@ -1,0 +1,640 @@
+/**
+ * 3D Viewer Specific Styles
+ */
+
+@import './variables';
+
+// ========== 3D Canvas Container ==========
+
+.canvas-3d-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: $scene-bg;
+  overflow: hidden;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    outline: none;
+  }
+}
+
+// ========== 3D HUD (Heads-Up Display) ==========
+
+.scene-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+// ========== Camera Controls UI ==========
+
+.camera-controls-ui {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .camera-button {
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: $transition-base;
+    font-size: $font-size-sm;
+
+    &:hover {
+      background: $hover-bg;
+    }
+
+    &.active {
+      background: $selected-bg;
+      color: $selected-color;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ========== View Cube ==========
+
+.view-cube {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 120px;
+  height: 120px;
+  background: white;
+  border: 2px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
+
+  .view-face {
+    border: 1px solid $sidebar-border-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $secondary;
+    transition: $transition-base;
+
+    &:hover {
+      background: $hover-bg;
+      color: $primary;
+    }
+
+    &.active {
+      background: $selected-bg;
+      color: $selected-color;
+    }
+
+    &.center {
+      background: $light;
+      cursor: default;
+
+      &:hover {
+        background: $light;
+      }
+    }
+  }
+}
+
+// ========== Axis Helper Display ==========
+
+.axis-helper-labels {
+  position: absolute;
+  bottom: 150px;
+  right: 1rem;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  padding: 0.5rem;
+  font-size: $font-size-sm;
+
+  .axis-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .axis-color {
+      width: 16px;
+      height: 3px;
+      border-radius: 2px;
+
+      &.x {
+        background: $axis-x-color;
+      }
+
+      &.y {
+        background: $axis-y-color;
+      }
+
+      &.z {
+        background: $axis-z-color;
+      }
+    }
+
+    .axis-name {
+      font-weight: $font-weight-semibold;
+      color: $dark;
+    }
+  }
+}
+
+// ========== Stats Display ==========
+
+.scene-stats {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: $border-radius;
+  padding: 0.5rem 0.75rem;
+  font-family: $font-family-monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .stat-label {
+      opacity: 0.8;
+    }
+
+    .stat-value {
+      font-weight: $font-weight-bold;
+    }
+  }
+}
+
+// ========== Transform Controls Gizmo ==========
+
+.transform-mode-selector {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius-pill;
+  box-shadow: $shadow;
+  padding: 0.25rem;
+  display: flex;
+  gap: 0.25rem;
+
+  .transform-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: $border-radius-pill;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition-base;
+
+    i {
+      font-size: 1.25rem;
+      color: $secondary;
+    }
+
+    &:hover {
+      background: $hover-bg;
+
+      i {
+        color: $dark;
+      }
+    }
+
+    &.active {
+      background: $selected-color;
+
+      i {
+        color: white;
+      }
+    }
+  }
+}
+
+// ========== Object Selection Outline ==========
+
+.selection-outline {
+  outline: 2px solid $selected-color;
+  outline-offset: 2px;
+}
+
+// ========== Material Editor Preview ==========
+
+.material-preview {
+  width: 100%;
+  aspect-ratio: 1;
+  background: $light;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .preview-label {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
+    text-align: center;
+  }
+}
+
+// ========== Lighting Controls ==========
+
+.lighting-controls {
+  .light-item {
+    background: $light;
+    border: 1px solid $sidebar-border-color;
+    border-radius: $border-radius;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    .light-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      .light-name {
+        font-weight: $font-weight-semibold;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          color: $warning;
+        }
+      }
+
+      .light-toggle {
+        // Bootstrap switch
+      }
+    }
+
+    .light-controls {
+      .control-row {
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        label {
+          font-size: $font-size-sm;
+          margin-bottom: 0.25rem;
+        }
+
+        input[type='range'] {
+          width: 100%;
+        }
+
+        .control-value {
+          font-size: $font-size-sm;
+          color: $secondary;
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+// ========== Performance Monitor ==========
+
+.performance-monitor {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: $success;
+  border-radius: $border-radius;
+  padding: 0.5rem;
+  font-family: $font-family-monospace;
+  font-size: 0.75rem;
+  min-width: 150px;
+
+  .perf-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .perf-label {
+      opacity: 0.7;
+    }
+
+    .perf-value {
+      font-weight: $font-weight-bold;
+
+      &.warning {
+        color: $warning;
+      }
+
+      &.danger {
+        color: $danger;
+      }
+    }
+  }
+}
+
+// ========== Context Menu for 3D Objects ==========
+
+.context-menu-3d {
+  position: absolute;
+  background: white;
+  border: 1px solid $sidebar-border-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow-lg;
+  min-width: 200px;
+  z-index: $zindex-popover;
+
+  .menu-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $sidebar-border-color;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    color: $secondary;
+  }
+
+  .menu-section {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid $sidebar-border-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .menu-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: $transition-base;
+    font-size: $font-size-sm;
+
+    &:hover {
+      background: $hover-bg;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    i {
+      width: 1.25rem;
+      text-align: center;
+    }
+
+    .item-label {
+      flex: 1;
+    }
+
+    .item-badge {
+      font-size: 0.7rem;
+      background: $primary;
+      color: white;
+      padding: 0.125rem 0.375rem;
+      border-radius: $border-radius-pill;
+    }
+  }
+}
+
+// ========== Loading 3D Model ==========
+
+.model-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  box-shadow: $shadow-lg;
+  text-align: center;
+  min-width: 250px;
+
+  .loading-spinner {
+    margin-bottom: 1rem;
+  }
+
+  .loading-text {
+    font-size: $font-size-base;
+    color: $dark;
+    margin-bottom: 0.5rem;
+  }
+
+  .loading-subtext {
+    font-size: $font-size-sm;
+    color: $secondary;
+  }
+}
+
+// ========== Screenshot Flash Effect ==========
+
+@keyframes screenshot-flash {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.screenshot-flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  pointer-events: none;
+  animation: screenshot-flash 0.3s ease-out;
+}
+
+// ========== Measurement Tool in 3D ==========
+
+.measurement-3d {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  margin-top: -0.5rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid rgba(0, 0, 0, 0.8);
+  }
+}
+
+// ========== Furniture Placement Helper ==========
+
+.placement-helper {
+  .placement-grid {
+    stroke: rgba($success, 0.3);
+    stroke-width: 1;
+    fill: none;
+  }
+
+  .placement-preview {
+    opacity: 0.5;
+  }
+
+  .placement-valid {
+    outline: 2px solid $success;
+    outline-offset: 2px;
+  }
+
+  .placement-invalid {
+    outline: 2px solid $danger;
+    outline-offset: 2px;
+  }
+}
+
+// ========== Shadow Quality Indicator ==========
+
+.shadow-quality-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: $border-radius-pill;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  i {
+    font-size: 0.8rem;
+  }
+}
+
+// ========== Camera Controls Widget (IKEA Style) ==========
+
+.camera-controls-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.camera-controls-widget {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+
+  .camera-controls-header {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 11px;
+  }
+
+  .camera-position-map {
+    display: flex;
+    justify-content: center;
+    user-select: none;
+
+    svg {
+      display: block;
+
+      circle {
+        transition: all 0.2s ease;
+
+        &:hover {
+          r: 10;
+          filter: brightness(1.1);
+        }
+      }
+    }
+  }
+}

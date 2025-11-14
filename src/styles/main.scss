@@ -1,0 +1,424 @@
+/**
+ * Main SCSS Entry Point
+ * Imports Bootstrap, variables, and custom styles
+ */
+
+// Import variables first (must be before Bootstrap)
+@import "./variables";
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Import Bootstrap Icons
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+// Import custom styles
+@import "./2d-editor";
+@import "./3d-viewer";
+@import "./templates";
+
+// ========== Global Styles ==========
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; // Prevent body scroll
+}
+
+body {
+  font-family: $font-family-sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+// ========== Utility Classes ==========
+
+.full-height {
+  height: 100vh;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-grab {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.cursor-crosshair {
+  cursor: crosshair;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+// ========== Scrollbar Customization ==========
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $light;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $secondary;
+  border-radius: $border-radius-pill;
+
+  &:hover {
+    background: darken($secondary, 10%);
+  }
+}
+
+// ========== Layout Components ==========
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-navbar {
+  flex-shrink: 0;
+  border-bottom: 1px solid $sidebar-border-color;
+  background: white;
+  z-index: $zindex-sticky;
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.app-sidebar {
+  width: $sidebar-width;
+  background: $sidebar-bg;
+  border-right: 1px solid $sidebar-border-color;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.3s ease, width 0.3s ease;
+  flex-shrink: 0;
+
+  &.collapsed {
+    transform: translateX(-100%);
+    width: 0;
+  }
+}
+
+.app-main {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: $canvas-bg;
+}
+
+.app-panel {
+  width: $panel-width;
+  background: $panel-bg;
+  border-left: 1px solid $panel-border-color;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.3s ease, width 0.3s ease;
+  flex-shrink: 0;
+
+  &.collapsed {
+    transform: translateX(100%);
+    width: 0;
+  }
+}
+
+.app-toolbar {
+  height: $toolbar-height;
+  background: $toolbar-bg;
+  border-top: 1px solid $toolbar-border-color;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 1rem;
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: $zindex-fixed;
+  transition: transform 0.3s ease;
+
+  &.collapsed {
+    transform: translateY(100%);
+  }
+}
+
+// ========== Toolbar & Button Groups ==========
+
+.tool-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $input-border-color;
+  background: white;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: $hover-bg;
+    border-color: $primary;
+  }
+
+  &.active {
+    background: $selected-bg;
+    border-color: $selected-color;
+    color: $selected-color;
+  }
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+// ========== Properties Panel ==========
+
+.properties-panel {
+  padding: 1rem;
+
+  .property-group {
+    margin-bottom: 1.5rem;
+
+    .property-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $dark;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .property-value {
+      width: 100%;
+    }
+  }
+
+  .property-divider {
+    border-top: 1px solid $sidebar-border-color;
+    margin: 1rem 0;
+  }
+}
+
+// ========== Furniture Library ==========
+
+.furniture-library {
+  padding: 1rem;
+
+  .furniture-category {
+    margin-bottom: 1.5rem;
+
+    .category-title {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        font-size: 1.25rem;
+      }
+    }
+
+    .furniture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.75rem;
+    }
+  }
+}
+
+.furniture-card {
+  border: 1px solid $card-border-color;
+  border-radius: $card-border-radius;
+  padding: 0.5rem;
+  background: white;
+  cursor: grab;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+    border-color: $primary;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .furniture-thumbnail {
+    width: 100%;
+    aspect-ratio: 1;
+    background: $light;
+    border-radius: $border-radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+
+    i {
+      font-size: 2rem;
+      color: $secondary;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $border-radius-sm;
+    }
+  }
+
+  .furniture-name {
+    font-size: $font-size-sm;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ========== Loading & Notifications ==========
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $zindex-modal;
+
+  .loading-content {
+    background: white;
+    padding: 2rem;
+    border-radius: $border-radius-lg;
+    text-align: center;
+    min-width: 300px;
+
+    .loading-spinner {
+      margin-bottom: 1rem;
+    }
+
+    .loading-message {
+      font-size: $font-size-base;
+      margin-bottom: 0.5rem;
+    }
+
+    .loading-progress {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.notification-container {
+  position: fixed;
+  top: 70px;
+  right: 1rem;
+  z-index: $zindex-tooltip;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 400px;
+}
+
+// ========== Responsive Design ==========
+
+@media (max-width: 992px) {
+  .app-sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: $zindex-sticky;
+    box-shadow: $shadow-lg;
+  }
+
+  .app-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: $zindex-sticky;
+    box-shadow: $shadow-lg;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-sidebar,
+  .app-panel {
+    width: 280px;
+  }
+
+  .app-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.5rem;
+  }
+
+  .furniture-library {
+    .furniture-grid {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .app-sidebar,
+  .app-panel {
+    width: 100%;
+  }
+
+  .furniture-library {
+    .furniture-grid {
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+  }
+}

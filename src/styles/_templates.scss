@@ -1,0 +1,30 @@
+/**
+ * Room Template Selector Styles
+ */
+
+.template-card {
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+
+  &:hover {
+    border-color: var(--bs-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+
+  .template-icon {
+    font-size: 48px;
+    user-select: none;
+  }
+
+  .card-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-text {
+    font-size: 0.875rem;
+    color: var(--bs-secondary);
+  }
+}
