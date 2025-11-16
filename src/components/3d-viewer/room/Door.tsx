@@ -22,8 +22,8 @@ const Door: React.FC<DoorProps> = ({ door, color = '#8b4513' }) => {
       </mesh>
 
       {/* Door handle */}
-      <mesh position={[width * 0.4, 0, thickness / 2 + 2]} castShadow>
-        <cylinderGeometry args={[1.5, 1.5, 3, 16]} rotation={[Math.PI / 2, 0, 0]} />
+      <mesh position={[width * 0.4, 0, thickness / 2 + 2]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+        <cylinderGeometry args={[1.5, 1.5, 3, 16]} />
         <meshStandardMaterial color="#888888" metalness={0.8} roughness={0.2} />
       </mesh>
     </group>

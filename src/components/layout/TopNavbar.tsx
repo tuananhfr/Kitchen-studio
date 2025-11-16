@@ -21,7 +21,6 @@ const TopNavbar: React.FC = () => {
 
   const viewMode = useUIStore((state) => state.viewMode);
   const setViewMode = useUIStore((state) => state.setViewMode);
-  const toggleViewMode = useUIStore((state) => state.toggleViewMode);
   const openModal = useUIStore((state) => state.openModal);
   const addNotification = useUIStore((state) => state.addNotification);
 
@@ -195,6 +194,7 @@ const TopNavbar: React.FC = () => {
           </Button>
 
           {/* Export */}
+          {/* @ts-ignore - React 19 + react-bootstrap type compatibility issue */}
           <DropdownButton
             as={ButtonGroup}
             title={

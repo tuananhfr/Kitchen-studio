@@ -2,7 +2,7 @@
  * Furniture and Interior Design type definitions
  */
 
-import {
+import type {
   Point3D,
   Rotation3D,
   Scale3D,
@@ -11,7 +11,6 @@ import {
   BoundingBox3D,
   Color
 } from './common.types';
-import { MaterialReference } from './floorPlan.types';
 
 // ========== Furniture Categories ==========
 

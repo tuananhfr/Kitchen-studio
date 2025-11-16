@@ -32,6 +32,7 @@ const RoomTemplateSelector: React.FC<RoomTemplateSelectorProps> = ({ show, onHid
     // Add all walls from template
     template.walls.forEach((wallData) => {
       addWall({
+        type: 'wall',
         name: `Wall`,
         start: {
           x: wallData.start.x + 100, // Offset to center in canvas
@@ -42,7 +43,8 @@ const RoomTemplateSelector: React.FC<RoomTemplateSelectorProps> = ({ show, onHid
           y: wallData.end.y + 100
         },
         thickness: wallData.thickness,
-        height: wallData.height
+        height: wallData.height,
+        cutouts: []
       });
     });
 
@@ -91,6 +93,7 @@ const RoomTemplateSelector: React.FC<RoomTemplateSelectorProps> = ({ show, onHid
       </Modal.Body>
 
       <Modal.Footer>
+        {/* @ts-ignore - React 19 + react-bootstrap type compatibility issue */}
         <Button variant="secondary" onClick={onHide}>
           Hủy
         </Button>

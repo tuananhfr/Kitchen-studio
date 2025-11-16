@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Form, Button, Card, Accordion } from 'react-bootstrap';
+import { Form, Button, Accordion } from 'react-bootstrap';
 import { useUIStore, useFloorPlanStore, useFurnitureStore } from '../../stores';
 
 const RightPanel: React.FC = () => {

@@ -126,9 +126,8 @@ const DrawingPreview: React.FC<DrawingPreviewProps> = ({ start, end, tool }) => 
           y={(start.y + end.y) / 2 - 25}
           text={`Distance: ${Math.round(distance)} cm`}
           fontSize={14}
-          fill="white"
-          padding={5}
           fill="#28a745"
+          padding={5}
           fontStyle="bold"
           listening={false}
         />

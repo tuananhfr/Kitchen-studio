@@ -464,6 +464,7 @@ export const useFloorPlanStore = create<FloorPlanStore>()(
           // Create wall from drawing
           if (state.currentTool === 'wall') {
             get().addWall({
+              type: 'wall',
               name: `Wall ${state.floorPlan?.walls.length ?? 0 + 1}`,
               start: { ...state.drawingStartPoint },
               end: { ...state.drawingEndPoint },

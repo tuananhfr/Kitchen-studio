@@ -3,9 +3,8 @@
  * Includes Wall, Door, Window, and FloorPlan structures
  */
 
-import {
+import type {
   Point2D,
-  Dimensions3D,
   BaseEntity,
   MeasurementUnit,
   Color

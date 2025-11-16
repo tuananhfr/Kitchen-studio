@@ -106,7 +106,7 @@ const Canvas2D: React.FC = () => {
     if (!pointerPosition) return { x: 0, y: 0 };
 
     // Transform screen coordinates to canvas coordinates
-    const transform = stage.getAbsoluteTransform().copy().invert();
+    const transform = stage!.getAbsoluteTransform().copy().invert();
     const point = transform.point(pointerPosition);
 
     return snapPoint(point);
@@ -140,6 +140,7 @@ const Canvas2D: React.FC = () => {
 
         if (isValid) {
           addDoor({
+            type: 'door',
             name: `Door ${floorPlan.doors.length + 1}`,
             wallId: result.wall.id,
             position: result.position,
@@ -167,6 +168,7 @@ const Canvas2D: React.FC = () => {
 
         if (isValid) {
           addWindow({
+            type: 'window',
             name: `Window ${floorPlan.windows.length + 1}`,
             wallId: result.wall.id,
             position: result.position,

@@ -9,7 +9,6 @@ import { devtools } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import type { FurnitureItem, FurnitureGroup } from '../types/furniture.types';
 import type { FurnitureStore, FurnitureState } from '../types/store.types';
-import type { Point3D } from '../types/common.types';
 
 /**
  * Initial state

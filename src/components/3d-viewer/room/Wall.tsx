@@ -2,7 +2,7 @@
  * Wall - 3D wall with cutouts for doors/windows
  */
 
-import React, { useMemo, forwardRef } from 'react';
+import { useMemo, forwardRef } from 'react';
 import * as THREE from 'three';
 import type { Wall3D } from '../../../utils/floorPlanTo3D';
 
@@ -23,16 +23,11 @@ const Wall = forwardRef<THREE.Mesh, WallProps>(({ wall, color = '#f5f5f5', opaci
     return new THREE.BoxGeometry(width, height, depth);
   }, [wall.dimensions]);
 
-  // Create edges geometry for outline
-  const edgesGeometry = useMemo(() => {
-    return new THREE.EdgesGeometry(wallGeometry);
-  }, [wallGeometry]);
-
   // Determine visibility based on opacity
   const showFullWall = opacityValue > 0.5;
 
   // Calculate footprint dimensions
-  const [width, height, depth] = wall.dimensions;
+  const [width, , depth] = wall.dimensions;
   const footprintHeight = 0.5; // Very thin plane just above floor
 
   return (

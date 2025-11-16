@@ -121,7 +121,7 @@ export function floorPlanTo3D(floorPlan: FloorPlan): Scene3D {
 /**
  * Convert single wall to 3D
  */
-function convertWallTo3D(wall: Wall, floorPlan: FloorPlan): Wall3D {
+function convertWallTo3D(wall: Wall, _floorPlan: FloorPlan): Wall3D {
   // Calculate wall direction and length
   const dx = wall.end.x - wall.start.x;
   const dy = wall.end.y - wall.start.y;

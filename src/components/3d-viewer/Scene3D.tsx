@@ -15,7 +15,7 @@ import * as THREE from 'three';
  */
 const CameraRig: React.FC<{ roomBounds: any }> = ({ roomBounds }) => {
   const controlsRef = useRef<any>(null);
-  const { camera, gl } = useThree();
+  const { gl } = useThree();
 
   // Calculate initial camera position and orbit target
   const { initialPosition, target, maxDim } = useMemo(() => {
@@ -37,7 +37,7 @@ const CameraRig: React.FC<{ roomBounds: any }> = ({ roomBounds }) => {
   }, [roomBounds]);
 
   // Double-click to fly-to functionality
-  const handleDoubleClick = (event: MouseEvent) => {
+  const handleDoubleClick = () => {
     // TODO: Implement raycasting to find clicked point and animate camera
     console.log('Double click detected - fly-to not yet implemented');
   };

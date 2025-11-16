@@ -2,7 +2,7 @@
  * Material and Texture type definitions
  */
 
-import { Color, HexColor } from './common.types';
+import type { Color, HexColor } from './common.types';
 
 // ========== Texture Types ==========
 

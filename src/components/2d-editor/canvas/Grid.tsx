@@ -13,7 +13,7 @@ interface GridProps {
 }
 
 const Grid: React.FC<GridProps> = ({ width, height, gridSize, scale }) => {
-  const lines: JSX.Element[] = [];
+  const lines: React.ReactElement[] = [];
 
   // Calculate grid bounds based on current view
   const padding = 1000; // Extra padding for panning

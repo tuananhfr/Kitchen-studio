@@ -19,7 +19,6 @@ const WallHighlight: React.FC<WallHighlightProps> = ({
   wall,
   position,
   width,
-  type,
   isValid
 }) => {
   // Get point on wall

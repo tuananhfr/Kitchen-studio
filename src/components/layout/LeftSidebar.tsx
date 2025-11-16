@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Nav, Button, ButtonGroup, Accordion, Form } from 'react-bootstrap';
+import { Button, Accordion, Form } from 'react-bootstrap';
 import { useUIStore, useFloorPlanStore } from '../../stores';
 import type { Tool2D } from '../../types';
 

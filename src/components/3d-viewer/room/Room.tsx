@@ -126,7 +126,7 @@ const Room: React.FC = () => {
   const frameCounterRef = useRef<number>(0);
 
   // Update wall opacities based on camera position (IKEA-style wall hiding)
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!scene3D) return;
 
     const cameraPos = camera.position;

@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { Group, Rect, Line, Circle, Text } from 'react-konva';
 import { useFloorPlanStore } from '../../../stores';
-import type { Window, Point2D } from '../../../types';
+import type { Window } from '../../../types';
 
 interface WindowRendererProps {
   window: Window;

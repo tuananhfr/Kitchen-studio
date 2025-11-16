@@ -3,10 +3,10 @@
  * Includes state and action types for all stores
  */
 
-import { FloorPlan, Wall, Door, Window } from './floorPlan.types';
-import { FurnitureItem, FurnitureGroup } from './furniture.types';
-import { Material, MaterialPreset } from './material.types';
-import { ViewMode, Tool2D, Point2D, Point3D } from './common.types';
+import type { FloorPlan, Wall, Door, Window } from './floorPlan.types';
+import type { FurnitureItem, FurnitureGroup } from './furniture.types';
+import type { Material, MaterialPreset } from './material.types';
+import type { ViewMode, Tool2D, Point2D, Point3D } from './common.types';
 
 // ========== Floor Plan Store ==========
 
@@ -246,6 +246,7 @@ export interface MaterialActions {
   redo: () => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
+  addToHistory: () => void;
 }
 
 /**

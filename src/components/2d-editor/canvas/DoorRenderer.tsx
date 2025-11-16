@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { Group, Rect, Arc, Line, Circle, Text } from 'react-konva';
 import { useFloorPlanStore } from '../../../stores';
-import type { Door, Point2D } from '../../../types';
+import type { Door } from '../../../types';
 
 interface DoorRendererProps {
   door: Door;
@@ -38,10 +38,6 @@ const DoorRenderer: React.FC<DoorRendererProps> = ({ door }) => {
   // Wall direction (normalized)
   const dirX = wallDx / wallLength;
   const dirY = wallDy / wallLength;
-
-  // Perpendicular direction
-  const perpX = -dirY;
-  const perpY = dirX;
 
   // Door frame points
   const doorStart = {

@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import { Container } from 'react-bootstrap';
 import { useUIStore } from '../../stores';
 import TopNavbar from './TopNavbar';
 import LeftSidebar from './LeftSidebar';
