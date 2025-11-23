@@ -1,8 +1,10 @@
 /**
- * Door - 3D door model (simplified)
+ * Door - 3D door model
+ * Uses custom geometry with world coordinates (EXACTLY like wall)
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
+import * as THREE from 'three';
 import type { Door3D } from '../../../utils/floorPlanTo3D';
 
 interface DoorProps {
@@ -13,20 +15,87 @@ interface DoorProps {
 const Door: React.FC<DoorProps> = ({ door, color = '#8b4513' }) => {
   const [width, height, thickness] = door.dimensions;
 
-  return (
-    <group position={door.position} rotation={door.rotation}>
-      {/* Door frame */}
-      <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <boxGeometry args={[width, height, thickness]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
+  // Create custom geometry EXACTLY like wall (vertices in world coordinates)
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
 
-      {/* Door handle */}
-      <mesh position={[width * 0.4, 0, thickness / 2 + 2]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <cylinderGeometry args={[1.5, 1.5, 3, 16]} />
-        <meshStandardMaterial color="#888888" metalness={0.8} roughness={0.2} />
-      </mesh>
-    </group>
+    // Door center position in world space
+    const centerX = door.position[0];
+    const centerY = door.position[1];
+    const centerZ = door.position[2];
+
+    // Door rotation angle
+    const angle = door.rotation[1];
+
+    // Calculate 4 corners of door (like wall corners)
+    // Door is centered at centerX, centerZ
+    const halfWidth = width / 2;
+    const halfThickness = thickness / 2;
+
+    // Corner offsets in local space (before rotation)
+    const corners = [
+      { x: -halfWidth, z: -halfThickness }, // c0: bottom-left
+      { x: -halfWidth, z: +halfThickness }, // c1: bottom-right (inner)
+      { x: +halfWidth, z: +halfThickness }, // c2: top-right (inner)
+      { x: +halfWidth, z: -halfThickness }, // c3: top-left
+    ];
+
+    // Rotate corners by angle and translate to world position
+    const cosAngle = Math.cos(angle);
+    const sinAngle = Math.sin(angle);
+
+    const worldCorners = corners.map(c => ({
+      x: centerX + c.x * cosAngle - c.z * sinAngle,
+      z: centerZ + c.x * sinAngle + c.z * cosAngle
+    }));
+
+    // Create vertices (8 points: 4 bottom + 4 top)
+    // Door bottom at centerY - height/2, top at centerY + height/2
+    const bottomY = centerY - height / 2;
+    const topY = centerY + height / 2;
+
+    const vertices = new Float32Array([
+      // Bottom face
+      worldCorners[0].x, bottomY, worldCorners[0].z,  // 0
+      worldCorners[1].x, bottomY, worldCorners[1].z,  // 1
+      worldCorners[2].x, bottomY, worldCorners[2].z,  // 2
+      worldCorners[3].x, bottomY, worldCorners[3].z,  // 3
+
+      // Top face
+      worldCorners[0].x, topY, worldCorners[0].z,  // 4
+      worldCorners[1].x, topY, worldCorners[1].z,  // 5
+      worldCorners[2].x, topY, worldCorners[2].z,  // 6
+      worldCorners[3].x, topY, worldCorners[3].z,  // 7
+    ]);
+
+    // Indices (same as wall)
+    const indices = new Uint16Array([
+      0, 2, 1, 0, 3, 2,  // Bottom
+      4, 5, 6, 4, 6, 7,  // Top
+      0, 1, 5, 0, 5, 4,  // Side 1
+      1, 2, 6, 1, 6, 5,  // Side 2
+      2, 3, 7, 2, 7, 6,  // Side 3
+      3, 0, 4, 3, 4, 7,  // Side 4
+    ]);
+
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.setIndex(new THREE.BufferAttribute(indices, 1));
+    geo.computeVertexNormals();
+
+    return geo;
+  }, [width, height, thickness, door.position, door.rotation]);
+
+  // Render EXACTLY like wall: rotation=[0,0,0], position=[0,0,0]
+  return (
+    <mesh
+      position={[0, 0, 0]}
+      rotation={[0, 0, 0]}
+      geometry={geometry}
+      castShadow
+      receiveShadow
+    >
+      <meshStandardMaterial color={color} />
+    </mesh>
   );
 };
 

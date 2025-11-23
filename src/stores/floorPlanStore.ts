@@ -28,6 +28,7 @@ const initialState: FloorPlanState = {
   floorPlan: null,
   selectedItemId: null,
   selectedItemType: null,
+  hoveredEndpointPoint: null,
   currentTool: 'select',
   isDrawing: false,
   drawingStartPoint: null,
@@ -149,14 +150,16 @@ export const useFloorPlanStore = create<FloorPlanStore>()(
 
       updateWall: (id, updates) => {
         set((state) => {
-          if (!state.floorPlan) return;
+          if (!state.floorPlan) return state;
 
-          const wall = state.floorPlan.walls.find((w) => w.id === id);
-          if (wall) {
+          const wallIndex = state.floorPlan.walls.findIndex((w) => w.id === id);
+          if (wallIndex !== -1) {
+            const wall = state.floorPlan.walls[wallIndex];
             Object.assign(wall, updates);
             wall.updatedAt = new Date().toISOString();
             state.floorPlan.metadata.updatedAt = wall.updatedAt;
           }
+          return state;
         });
 
         get().addToHistory();
@@ -424,6 +427,12 @@ export const useFloorPlanStore = create<FloorPlanStore>()(
         set((state) => {
           state.selectedItemId = null;
           state.selectedItemType = null;
+        });
+      },
+
+      setHoveredEndpointPoint: (point: Point2D | null) => {
+        set((state) => {
+          state.hoveredEndpointPoint = point;
         });
       },
 

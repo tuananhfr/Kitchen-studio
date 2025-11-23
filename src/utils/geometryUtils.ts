@@ -142,3 +142,62 @@ export function isValidPlacementPosition(
 
   return true;
 }
+
+/**
+ * Calculate distance between two points
+ */
+export function distanceBetweenPoints(p1: Point2D, p2: Point2D): number {
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+/**
+ * Find nearest wall endpoint to snap to
+ * Returns the snapped point if within snapDistance, otherwise returns original point
+ */
+export function findSnapPoint(
+  point: Point2D,
+  walls: Wall[],
+  snapDistance: number = 20
+): { point: Point2D; snapped: boolean; wallId?: string; isStart?: boolean } {
+  let closestPoint: Point2D | null = null;
+  let minDistance = snapDistance;
+  let closestWallId: string | undefined;
+  let isStartPoint: boolean | undefined;
+
+  // Check all wall endpoints
+  for (const wall of walls) {
+    // Check start point
+    const distToStart = distanceBetweenPoints(point, wall.start);
+    if (distToStart < minDistance) {
+      minDistance = distToStart;
+      closestPoint = wall.start;
+      closestWallId = wall.id;
+      isStartPoint = true;
+    }
+
+    // Check end point
+    const distToEnd = distanceBetweenPoints(point, wall.end);
+    if (distToEnd < minDistance) {
+      minDistance = distToEnd;
+      closestPoint = wall.end;
+      closestWallId = wall.id;
+      isStartPoint = false;
+    }
+  }
+
+  if (closestPoint) {
+    return {
+      point: closestPoint,
+      snapped: true,
+      wallId: closestWallId,
+      isStart: isStartPoint
+    };
+  }
+
+  return {
+    point,
+    snapped: false
+  };
+}

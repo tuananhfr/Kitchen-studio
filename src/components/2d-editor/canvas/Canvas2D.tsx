@@ -9,16 +9,20 @@ import Konva from "konva";
 
 import { useFloorPlanStore, useUIStore } from "../../../stores";
 import Grid from "./Grid";
-import WallRenderer from "./WallRenderer";
+import FloorRenderer from "./FloorRenderer";
+import WallRenderer from "./WallRenderer"; // IKEA style - simple individual walls
 import DoorRenderer from "./DoorRenderer";
 import WindowRenderer from "./WindowRenderer";
 import DrawingPreview from "./DrawingPreview";
 import WallHighlight from "./WallHighlight";
+import SnapIndicator from "./SnapIndicator";
 import type { Point2D, Wall } from "../../../types";
 import {
   findClosestWall,
   isValidPlacementPosition,
+  findSnapPoint,
 } from "../../../utils/geometryUtils";
+import { detectJunctions, getAdjustedWallCorners } from "../../../utils/wallJunctions";
 import { DOOR_DEFAULTS, WINDOW_DEFAULTS } from "../../../constants/config";
 
 const Canvas2D: React.FC = () => {
@@ -38,6 +42,12 @@ const Canvas2D: React.FC = () => {
     wall: Wall;
     position: number;
     isValid: boolean;
+  } | null>(null);
+
+  // Snap point state for wall drawing
+  const [snapPoint, setSnapPoint] = useState<{
+    point: Point2D;
+    snapped: boolean;
   } | null>(null);
 
   // Store state
@@ -83,15 +93,39 @@ const Canvas2D: React.FC = () => {
   }, []);
 
   /**
-   * Snap point to grid
+   * Snap point to grid and wall endpoints
    */
-  const snapPoint = (point: Point2D): Point2D => {
+  const snapPointToGrid = (point: Point2D): Point2D => {
     if (!snapToGrid) return point;
 
     return {
       x: Math.round(point.x / gridSize) * gridSize,
       y: Math.round(point.y / gridSize) * gridSize,
     };
+  };
+
+  /**
+   * Snap point with wall endpoint priority
+   */
+  const snapPointWithWalls = (point: Point2D): Point2D => {
+    // First, snap to grid if enabled
+    const gridSnappedPoint = snapPointToGrid(point);
+
+    // Then, check for nearby wall endpoints (higher priority)
+    if (floorPlan && currentTool === 'wall') {
+      const snapResult = findSnapPoint(gridSnappedPoint, floorPlan.walls, 30);
+
+      // Update snap indicator state
+      setSnapPoint({
+        point: snapResult.point,
+        snapped: snapResult.snapped
+      });
+
+      return snapResult.point;
+    }
+
+    setSnapPoint(null);
+    return gridSnappedPoint;
   };
 
   /**
@@ -109,7 +143,7 @@ const Canvas2D: React.FC = () => {
     const transform = stage!.getAbsoluteTransform().copy().invert();
     const point = transform.point(pointerPosition);
 
-    return snapPoint(point);
+    return snapPointWithWalls(point);
   };
 
   /**
@@ -288,6 +322,43 @@ const Canvas2D: React.FC = () => {
   };
 
   /**
+   * Log 2D walls summary when walls change (with junction adjustment)
+   */
+  useEffect(() => {
+    if (floorPlan && floorPlan.walls.length > 0) {
+      const junctions = detectJunctions(floorPlan.walls);
+
+      console.log('📐 ===== 2D WALLS SUMMARY (ADJUSTED) =====');
+      console.table(floorPlan.walls.map(wall => {
+        const dx = wall.end.x - wall.start.x;
+        const dy = wall.end.y - wall.start.y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+
+        // Get ADJUSTED corners (same as what's rendered)
+        const adjustedCorners = getAdjustedWallCorners(wall, floorPlan.walls, junctions);
+
+        return {
+          'Wall ID': wall.id.substring(0, 8),
+          'Start X': wall.start.x.toFixed(1),
+          'Start Y': wall.start.y.toFixed(1),
+          'End X': wall.end.x.toFixed(1),
+          'End Y': wall.end.y.toFixed(1),
+          'Length': length.toFixed(1),
+          'Thickness': wall.thickness,
+          'Corner1 X': adjustedCorners[0]?.x.toFixed(1) || 'N/A',
+          'Corner1 Y': adjustedCorners[0]?.y.toFixed(1) || 'N/A',
+          'Corner2 X': adjustedCorners[1]?.x.toFixed(1) || 'N/A',
+          'Corner2 Y': adjustedCorners[1]?.y.toFixed(1) || 'N/A',
+          'Corner3 X': adjustedCorners[2]?.x.toFixed(1) || 'N/A',
+          'Corner3 Y': adjustedCorners[2]?.y.toFixed(1) || 'N/A',
+          'Corner4 X': adjustedCorners[3]?.x.toFixed(1) || 'N/A',
+          'Corner4 Y': adjustedCorners[3]?.y.toFixed(1) || 'N/A'
+        };
+      }));
+    }
+  }, [floorPlan?.walls]);
+
+  /**
    * Handle keyboard shortcuts
    */
   useEffect(() => {
@@ -379,7 +450,10 @@ const Canvas2D: React.FC = () => {
 
         {/* Main Drawing Layer */}
         <Layer>
-          {/* Render walls */}
+          {/* Render floor (sàn) - below walls */}
+          <FloorRenderer />
+
+          {/* Render walls - IKEA style (each wall is separate) */}
           {floorPlan?.walls.map((wall) => (
             <WallRenderer key={wall.id} wall={wall} />
           ))}
@@ -418,6 +492,14 @@ const Canvas2D: React.FC = () => {
                 isValid={hoveredWall.isValid}
               />
             )}
+
+          {/* Snap indicator for wall endpoints */}
+          {snapPoint && currentTool === "wall" && (
+            <SnapIndicator
+              point={snapPoint.point}
+              snapped={snapPoint.snapped}
+            />
+          )}
         </Layer>
       </Stage>
 

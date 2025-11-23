@@ -21,6 +21,9 @@ export interface FloorPlanState {
   selectedItemId: string | null;
   selectedItemType: 'wall' | 'door' | 'window' | null;
 
+  // Hovered endpoint (for highlighting connected walls)
+  hoveredEndpointPoint: Point2D | null;
+
   // Current tool
   currentTool: Tool2D;
 
@@ -66,6 +69,9 @@ export interface FloorPlanActions {
   // Selection
   setSelectedItem: (id: string | null, type: 'wall' | 'door' | 'window' | null) => void;
   clearSelection: () => void;
+
+  // Hovered endpoint
+  setHoveredEndpointPoint: (point: Point2D | null) => void;
 
   // Tool
   setCurrentTool: (tool: Tool2D) => void;

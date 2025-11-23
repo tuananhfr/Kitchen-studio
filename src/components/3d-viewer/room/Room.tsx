@@ -2,27 +2,37 @@
  * Room - Complete 3D room from floor plan
  */
 
-import React, { useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useFloorPlanStore } from '../../../stores';
-import { floorPlanTo3D } from '../../../utils/floorPlanTo3D';
-import type { Wall3D } from '../../../utils/floorPlanTo3D';
-import Floor from './Floor';
-import Wall from './Wall';
-import Door from './Door';
-import Window from './Window';
-import * as THREE from 'three';
+import React, { useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useFloorPlanStore } from "../../../stores";
+import { floorPlanTo3D } from "../../../utils/floorPlanTo3D";
+import type { Wall3D, Door3D, Window3D } from "../../../utils/floorPlanTo3D";
+import type { Wall as Wall2D } from "../../../types";
+import Floor from "./Floor";
+// import Footprint from "./Footprint";
+import Wall from "./Wall";
+import Door from "./Door";
+import Window from "./Window";
+import * as THREE from "three";
 
 /**
  * Wall component with dynamic opacity based on camera position
  */
 interface WallWithOpacityProps {
   wall: Wall3D;
+  walls2D: Wall2D[];
   color: string;
-  opacityRef: React.MutableRefObject<Record<string, { current: number; target: number }>>;
+  opacityRef: React.MutableRefObject<
+    Record<string, { current: number; target: number }>
+  >;
 }
 
-const WallWithOpacity: React.FC<WallWithOpacityProps> = ({ wall, color, opacityRef }) => {
+const WallWithOpacity: React.FC<WallWithOpacityProps> = ({
+  wall,
+  walls2D,
+  color,
+  opacityRef,
+}) => {
   const [opacityValue, setOpacityValue] = React.useState(1.0);
 
   // Update opacity value periodically (throttled)
@@ -36,7 +46,48 @@ const WallWithOpacity: React.FC<WallWithOpacityProps> = ({ wall, color, opacityR
     }
   });
 
-  return <Wall wall={wall} color={color} opacityValue={opacityValue} />;
+  return (
+    <Wall
+      wall={wall}
+      walls2D={walls2D}
+      color={color}
+      opacityValue={opacityValue}
+    />
+  );
+};
+
+// Door wrapper with opacity tracking
+interface DoorWithOpacityProps {
+  door: Door3D;
+  color: string;
+  opacityRef: React.MutableRefObject<
+    Record<string, React.MutableRefObject<number>>
+  >;
+}
+
+const DoorWithOpacity: React.FC<DoorWithOpacityProps> = ({
+  door,
+  color,
+}) => {
+  // Always visible for debugging
+  return <Door door={door} color={color} />;
+};
+
+// Window wrapper with opacity tracking
+interface WindowWithOpacityProps {
+  window: Window3D;
+  frameColor: string;
+  opacityRef: React.MutableRefObject<
+    Record<string, React.MutableRefObject<number>>
+  >;
+}
+
+const WindowWithOpacity: React.FC<WindowWithOpacityProps> = ({
+  window,
+  frameColor,
+}) => {
+  // Always visible for debugging
+  return <Window window={window} frameColor={frameColor} />;
 };
 
 // Reusable vectors to avoid creating new objects every frame
@@ -94,14 +145,21 @@ const Room: React.FC = () => {
   const { camera } = useThree();
 
   // Ref to track wall opacities (using ref to avoid re-renders)
-  const wallOpacitiesRef = useRef<Record<string, { current: number; target: number }>>({});
+  const wallOpacitiesRef = useRef<
+    Record<string, { current: number; target: number }>
+  >({});
 
   // Ref to track wall hidden state with frame counter for stability
-  const wallHiddenStateRef = useRef<Record<string, {
-    hidden: boolean;
-    counter: number;
-    lastShouldHide: boolean;
-  }>>({});
+  const wallHiddenStateRef = useRef<
+    Record<
+      string,
+      {
+        hidden: boolean;
+        counter: number;
+        lastShouldHide: boolean;
+      }
+    >
+  >({});
 
   // Convert 2D floor plan to 3D
   const scene3D = useMemo(() => {
@@ -109,7 +167,7 @@ const Room: React.FC = () => {
     try {
       return floorPlanTo3D(floorPlan);
     } catch (error) {
-      console.error('Error converting floor plan to 3D:', error);
+      console.error("Error converting floor plan to 3D:", error);
       return null;
     }
   }, [floorPlan]);
@@ -144,14 +202,18 @@ const Room: React.FC = () => {
         wallHiddenStateRef.current[wall.id] = {
           hidden: false,
           counter: 0,
-          lastShouldHide: false
+          lastShouldHide: false,
         };
       }
 
       // Only check visibility every N frames to reduce jitter
       if (frameCounterRef.current % checkInterval === 0) {
         // Check if wall should be hidden
-        const shouldHide = isWallBetweenCameraAndRoom(wall, cameraPos, roomCenter);
+        const shouldHide = isWallBetweenCameraAndRoom(
+          wall,
+          cameraPos,
+          roomCenter
+        );
 
         // Get current state
         const state = wallHiddenStateRef.current[wall.id];
@@ -195,11 +257,22 @@ const Room: React.FC = () => {
     <group>
       {/* Floor */}
       <Floor
-        width={scene3D.floor.dimensions[0]}
-        depth={scene3D.floor.dimensions[1]}
+        width={
+          "dimensions" in scene3D.floor
+            ? scene3D.floor.dimensions[0]
+            : undefined
+        }
+        depth={
+          "dimensions" in scene3D.floor
+            ? scene3D.floor.dimensions[1]
+            : undefined
+        }
+        polygon={"polygon" in scene3D.floor ? scene3D.floor.polygon : undefined}
         position={scene3D.floor.position}
         color="#c19a6b"
       />
+
+      {/* Footprint removed - now rendered per-wall in Wall.tsx */}
 
       {/* Ceiling (optional - can be toggled) */}
       {/* <Floor
@@ -214,19 +287,30 @@ const Room: React.FC = () => {
         <WallWithOpacity
           key={wall.id}
           wall={wall}
+          walls2D={scene3D.walls2D}
           color="#f5f5f5"
           opacityRef={wallOpacitiesRef}
         />
       ))}
 
-      {/* Doors */}
+      {/* Doors - only visible when wall is visible */}
       {scene3D.doors.map((door) => (
-        <Door key={door.id} door={door} color="#8b4513" />
+        <DoorWithOpacity
+          key={door.id}
+          door={door}
+          color="#8b4513"
+          opacityRef={wallOpacitiesRef}
+        />
       ))}
 
-      {/* Windows */}
+      {/* Windows - only visible when wall is visible */}
       {scene3D.windows.map((window) => (
-        <Window key={window.id} window={window} frameColor="#444444" />
+        <WindowWithOpacity
+          key={window.id}
+          window={window}
+          frameColor="#444444"
+          opacityRef={wallOpacitiesRef}
+        />
       ))}
     </group>
   );

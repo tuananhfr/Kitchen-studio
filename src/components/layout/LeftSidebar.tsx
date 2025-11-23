@@ -3,10 +3,10 @@
  * Shows 2D tools in 2D mode, Furniture library in 3D mode
  */
 
-import React from 'react';
-import { Button, Accordion, Form } from 'react-bootstrap';
-import { useUIStore, useFloorPlanStore } from '../../stores';
-import type { Tool2D } from '../../types';
+import React from "react";
+import { Button, Accordion, Form } from "react-bootstrap";
+import { useUIStore, useFloorPlanStore } from "../../stores";
+import type { Tool2D } from "../../types";
 
 const LeftSidebar: React.FC = () => {
   const viewMode = useUIStore((state) => state.viewMode);
@@ -18,10 +18,10 @@ const LeftSidebar: React.FC = () => {
    */
   const render2DTools = () => {
     const tools: Array<{ id: Tool2D; icon: string; label: string }> = [
-      { id: 'select', icon: 'bi-cursor', label: 'Select' },
-      { id: 'wall', icon: 'bi-pencil', label: 'Wall' },
-      { id: 'door', icon: 'bi-door-closed', label: 'Door' },
-      { id: 'window', icon: 'bi-window', label: 'Window' }
+      { id: "select", icon: "bi-cursor", label: "Select" },
+      { id: "wall", icon: "bi-pencil", label: "Wall" },
+      { id: "door", icon: "bi-door-closed", label: "Door" },
+      { id: "window", icon: "bi-window", label: "Window" },
     ];
 
     return (
@@ -35,7 +35,9 @@ const LeftSidebar: React.FC = () => {
           {tools.map((tool) => (
             <Button
               key={tool.id}
-              variant={currentTool === tool.id ? 'primary' : 'outline-secondary'}
+              variant={
+                currentTool === tool.id ? "primary" : "outline-secondary"
+              }
               className="d-flex align-items-center gap-3 justify-content-start"
               onClick={() => setCurrentTool(tool.id)}
             >
@@ -51,9 +53,9 @@ const LeftSidebar: React.FC = () => {
             Tool Options
           </h6>
 
-          {currentTool === 'wall' && <WallToolOptions />}
-          {currentTool === 'door' && <DoorToolOptions />}
-          {currentTool === 'window' && <WindowToolOptions />}
+          {currentTool === "wall" && <WallToolOptions />}
+          {currentTool === "door" && <DoorToolOptions />}
+          {currentTool === "window" && <WindowToolOptions />}
         </div>
       </div>
     );
@@ -64,15 +66,15 @@ const LeftSidebar: React.FC = () => {
    */
   const render3DFurniture = () => {
     const categories = [
-      { id: 'cabinet', icon: 'bi-box', label: 'Cabinets', count: 12 },
-      { id: 'appliance', icon: 'bi-lightning', label: 'Appliances', count: 8 },
-      { id: 'counter', icon: 'bi-table', label: 'Counters', count: 6 },
-      { id: 'table', icon: 'bi-grid-3x3', label: 'Tables', count: 10 },
-      { id: 'chair', icon: 'bi-person-chair', label: 'Chairs', count: 15 },
-      { id: 'lighting', icon: 'bi-lightbulb', label: 'Lighting', count: 9 },
-      { id: 'sink', icon: 'bi-droplet', label: 'Sinks', count: 5 },
-      { id: 'storage', icon: 'bi-archive', label: 'Storage', count: 7 },
-      { id: 'decoration', icon: 'bi-star', label: 'Decorations', count: 20 }
+      { id: "cabinet", icon: "bi-box", label: "Cabinets", count: 12 },
+      { id: "appliance", icon: "bi-lightning", label: "Appliances", count: 8 },
+      { id: "counter", icon: "bi-table", label: "Counters", count: 6 },
+      { id: "table", icon: "bi-grid-3x3", label: "Tables", count: 10 },
+      { id: "chair", icon: "bi-person-chair", label: "Chairs", count: 15 },
+      { id: "lighting", icon: "bi-lightbulb", label: "Lighting", count: 9 },
+      { id: "sink", icon: "bi-droplet", label: "Sinks", count: 5 },
+      { id: "storage", icon: "bi-archive", label: "Storage", count: 7 },
+      { id: "decoration", icon: "bi-star", label: "Decorations", count: 20 },
     ];
 
     return (
@@ -99,7 +101,9 @@ const LeftSidebar: React.FC = () => {
               <Accordion.Header>
                 <i className={`${category.icon} me-2`}></i>
                 {category.label}
-                <span className="badge bg-secondary ms-auto me-2">{category.count}</span>
+                <span className="badge bg-secondary ms-auto me-2">
+                  {category.count}
+                </span>
               </Accordion.Header>
               <Accordion.Body>
                 <div className="furniture-grid">
@@ -109,9 +113,7 @@ const LeftSidebar: React.FC = () => {
                       <div className="furniture-thumbnail">
                         <i className={category.icon}></i>
                       </div>
-                      <div className="furniture-name">
-                        Item {i + 1}
-                      </div>
+                      <div className="furniture-name">Item {i + 1}</div>
                     </div>
                   ))}
                 </div>
@@ -125,7 +127,7 @@ const LeftSidebar: React.FC = () => {
 
   return (
     <div className="h-100 overflow-auto">
-      {viewMode === '2d' ? render2DTools() : render3DFurniture()}
+      {viewMode === "2d" ? render2DTools() : render3DFurniture()}
     </div>
   );
 };
@@ -138,12 +140,24 @@ const WallToolOptions: React.FC = () => {
     <div className="d-flex flex-column gap-2">
       <Form.Group>
         <Form.Label className="small">Thickness (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={20} min={10} max={50} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={20}
+          min={10}
+          max={50}
+        />
       </Form.Group>
 
       <Form.Group>
         <Form.Label className="small">Height (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={240} min={200} max={400} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={240}
+          min={200}
+          max={400}
+        />
       </Form.Group>
 
       <Form.Group>
@@ -177,12 +191,24 @@ const DoorToolOptions: React.FC = () => {
 
       <Form.Group>
         <Form.Label className="small">Width (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={80} min={60} max={120} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={80}
+          min={60}
+          max={120}
+        />
       </Form.Group>
 
       <Form.Group>
         <Form.Label className="small">Height (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={200} min={180} max={240} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={200}
+          min={180}
+          max={240}
+        />
       </Form.Group>
 
       <Form.Group>
@@ -216,17 +242,35 @@ const WindowToolOptions: React.FC = () => {
 
       <Form.Group>
         <Form.Label className="small">Width (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={100} min={50} max={200} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={100}
+          min={50}
+          max={200}
+        />
       </Form.Group>
 
       <Form.Group>
         <Form.Label className="small">Height (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={120} min={60} max={180} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={120}
+          min={60}
+          max={180}
+        />
       </Form.Group>
 
       <Form.Group>
         <Form.Label className="small">Sill Height (cm)</Form.Label>
-        <Form.Control type="number" size="sm" defaultValue={90} min={60} max={150} />
+        <Form.Control
+          type="number"
+          size="sm"
+          defaultValue={90}
+          min={60}
+          max={150}
+        />
       </Form.Group>
     </div>
   );
