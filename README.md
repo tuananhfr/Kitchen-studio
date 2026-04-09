@@ -18,3 +18,5 @@ It allows users to first create a 2D floor plan (walls, doors, windows), then sw
   - Interactive 3D view using React Three Fiber (Three.js)
   - Drag & drop kitchen furniture (meuble)
   - Change materials, colors, and lighting in real time
+
+### sth
